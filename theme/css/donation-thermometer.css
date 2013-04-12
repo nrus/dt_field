@@ -1,0 +1,92 @@
+.ft-wrapper {
+  width:225px; 
+  height:300px
+}
+
+.ft-top {
+  float:left; 
+  width:225px; 
+  height:234px
+}  
+.ft-top-wrapper {
+  float:left;
+  width: 73px;
+  eight: 234px;
+}
+
+.ft-top-left {
+  height: 200px;
+  width: 36px;
+  background: url('../images/therm-bg.jpg') no-repeat;
+  padding: 34px 0 0 37px;  
+  position: relative;
+}
+
+.ft-therm-graph {
+  height: 200px;
+  width: 15px;
+  background-color: #96bc5e;
+  border: solid 1px #64a050;
+  border-bottom: none;
+  max-height: 200px;
+  position: absolute;
+  bottom: 0;
+}
+
+.ft-top-right {
+  float: left; 
+  width: 152px; 
+  height: 234px; 
+  visibility: visible; 
+  background-color: rgba(0, 0, 0, 0); 
+}
+
+.ft-top-message {
+  width:152px; 
+  height:65px;
+  background: url('../images/therm-top.jpg') no-repeat;
+}
+
+.ft-goal-box {
+  width:152px; 
+  height:169px;
+  background: url('../images/goal-bg.jpg') no-repeat;
+}
+
+.ft-goal-box>div {
+  padding-right: 20px;
+  padding-bottom: 0;
+  padding-left: 10px;
+  text-align: center;
+  font-size: 30px;
+  color: #7190c5;
+  line-height: 1.1;
+}
+
+.ft-target {
+  padding-top: 15px;
+}
+
+.ft-raised {
+  padding-top: 12px;
+}
+
+.ft-goal-box .ft-legend {
+  font-size: 12px;
+  color: #a0b081;
+}
+
+.ft-bottom-left {
+  float:left; 
+  width:92px; 
+  height:67px;
+  background: url(../images/1zmxthbtm.jpg) no-repeat;
+}
+
+.ft-bottom-right {
+  float:left; 
+  width:133px; 
+  height:67px; 
+  background-image:url(../images/8df8as0dikwer3.jpg); 
+  background-repeat:no-repeat;
+}

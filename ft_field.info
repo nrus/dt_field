@@ -1,0 +1,6 @@
+name = Fundraising Thermometer Field
+description = A field to show donations thermometers based on the values entered.
+core = 7.x
+files[] = ft_field.module
+files[] = ft_field.install
+dependencies[] = field_ui

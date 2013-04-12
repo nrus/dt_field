@@ -1,0 +1,174 @@
+<?php
+/**
+ * @file
+ * Provides custom fundraising thermometer field.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function ft_field_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#ft_field':
+      return t("TODO: Create admin help text.");
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function ft_field_menu() { 
+  // This is the minimum information you can provide for a menu item.
+  $items['ft_field'] = array(
+    'title' => 'TODO: Enter menu item title',
+    'page callback' => 'TODO: Enter callback function',
+    'access arguments' => array('TODO: Enter user permissions'),
+  );
+
+
+  return $items;
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function ft_field_field_info() {
+  return array(
+    'donation_thermometer' => array(
+      'label' => t('Donation thermometer'),
+      'description' => t('This field stores the target sum of the fundraising and the sum raised thus far.'),
+      'default_widget' => 'donation_thermometer',
+      'default_formatter' => 'donation_thermometer_default',
+    ),
+  );
+}
+
+///**
+// * Implements hook_field_validate().
+// */
+function ft_field_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+//    if (!empty($item['value'])) {
+//      if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
+//        $errors[$field['field_name']][$langcode][$delta][] = array(
+//          'error' => 'text_max_length',
+//          'message' => t('Fundraising Thermometer Field: the value may not be longer than %max characters.', array('Fundraising Thermometer Field' => $instance['label'], '%max' => $field['settings']['max_length'])),
+//        );
+//      }
+//    }
+  }
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function ft_field_field_is_empty($item, $field) {
+  if (empty($item['sum_targeted']) && empty($item['sum_raised'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function ft_field_field_widget_info() {
+    return array(
+    'donation_thermometer' => array(
+      'label' => t('Donation thermometer form'),
+      'field types' => array('donation_thermometer'),
+      'settings' => array('size' => 60),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+   
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function ft_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  
+  $element['sum_targeted'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Target sum'),
+      '#default_value' => isset($items[$delta]['sum_targeted']) ? $items[$delta]['sum_targeted'] : NULL,
+      '#element_validate' => array('_element_validate_integer_positive'),
+      '#required' => TRUE,
+  );
+  $element['sum_collected'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Sum raised'),
+      '#default_value' => isset($items[$delta]['sum_collected']) ? $items[$delta]['sum_collected'] : NULL,
+      '#required' => TRUE,
+  );
+  $element['currency'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Currency to use'),
+      '#default_value' => isset($items[$delta]['currency']) ? $items[$delta]['currency'] : t('$'),
+  );
+  $element['message'] =  array(
+      '#type' => 'textarea',
+      '#title' => 'Call to action',
+      '#description' => t('Leave empty to display no message'),
+      '#default_value' => isset($items[$delta]['message']) ? $items[$delta]['message'] : NULL,  
+  );
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function ft_field_field_formatter_info() {
+  return array(
+      'donation_thermometer_default' => array(
+          'label' => t('Default'),
+          'field types' => array('donation_thermometer'),
+          'settings' => array(),
+      ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function ft_field_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+  
+  switch ($display['type']) {
+    case 'donation_thermometer_default':
+      foreach ($items as $delta => $item) {
+      
+        $element[$delta]['#theme'] = 'ft_field_template';
+        $element[$delta]['#attached'] = array('css' => array(drupal_get_path('module', 'ft_field') . '/theme/css/donation-thermometer.css'));
+        $element[$delta]['#data'] = array($item);
+      }
+      break;
+  }
+  return $element;
+  
+}
+
+/**
+ * Implements hook_theme().
+ */
+function ft_field_theme($existing, $type, $theme, $path) {
+  return array(
+      'ft_field_template' => array(
+          'template' => 'theme/donation-thermometer',
+          'variables' => array('data' => NULL),
+      ),
+  );
+}
+
+function ft_field_preprocess_ft_field_template(&$vars) {
+  $vars['sum_targeted'] = $vars['data'][0]['sum_targeted'];
+  $vars['sum_collected'] = $vars['data'][0]['sum_collected'];
+  $vars['currency'] = $vars['data'][0]['currency'];
+  $vars['message'] = $vars['data'][0]['message'];
+  $vars['percentage'] = round(($vars['sum_collected'] * 100) / $vars['sum_targeted']);
+ }
